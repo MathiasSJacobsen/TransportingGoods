@@ -111,12 +111,13 @@ fun parseInstance(filepath:String): Instance {
         nodeTimeAndCost
     )
 }
-fun isFeasible(instance: Instance, solution: IntArray): Pair<Boolean, String>{
+fun isFeasible(instance: Instance, solution: MutableList<Int>): Pair<Boolean, String>{
     var startIndex = 0;
     val zeroIndices = getVehicleIndices(solution);
     for (i in 0 until instance.numberOfVehicles){
         val vehicle = instance.vehicles[i]!!
-        val route = solution.sliceArray(startIndex until zeroIndices[i])
+
+        val route = solution.subList(startIndex, zeroIndices[i]) //TODO: remove solution.sliceArray(startIndex until zeroIndices[i])
 
         // 1. Check that the route is compatible with the vehicle
         for (call in route){
@@ -178,10 +179,10 @@ fun isFeasible(instance: Instance, solution: IntArray): Pair<Boolean, String>{
     }
     return Pair(true, "Feasible")
 }
-fun costFunction(instance: Instance, solution: IntArray): Int {
+fun costFunction(instance: Instance, solution: MutableList<Int>): Int {
     val zeroIndices = getVehicleIndices(solution)
-    val outSourced = solution.sliceArray((zeroIndices[zeroIndices.size-1]+1) until solution.size)
-    val packetsOnVehicle = solution.sliceArray(0 until zeroIndices[zeroIndices.size-1])
+    val outSourced = solution.subList(zeroIndices[zeroIndices.size-1]+1, solution.size)
+    val packetsOnVehicle = solution.subList(0, zeroIndices[zeroIndices.size-1])
 
     var cost = 0;
     var startIndex = 0;
@@ -217,14 +218,14 @@ fun costFunction(instance: Instance, solution: IntArray): Int {
     return cost
 }
 
-fun getVehicleIndices(array: IntArray): IntArray {
+fun getVehicleIndices(array: MutableList<Int>): MutableList<Int> {
     val indices = arrayListOf<Int>();
     array.forEachIndexed { index, element ->
         if (element == -1){
             indices.add(index);
         }
     }
-    return indices.toIntArray();
+    return indices;
 }
 
 

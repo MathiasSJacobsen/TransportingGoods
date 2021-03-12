@@ -3,7 +3,7 @@ import utils.costFunction
 import utils.isFeasible
 
 
-data class Solution( val instance: Instance, val arr: IntArray) {
+data class Solution( val instance: Instance, val arr: MutableList<Int>) {
 
     public val solution = arr.map { it+1 }
     public val cost = costFunction(instance, arr)

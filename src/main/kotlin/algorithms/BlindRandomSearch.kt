@@ -46,7 +46,7 @@ class BlindRandomSearch : IAlgorithm {
         currentVehicle.addAll(currentVehicle)
         currentVehicle.shuffle()
         sol.addAll(currentVehicle)
-        return Solution(instance, sol.toIntArray())
+        return Solution(instance, sol)
     }
 
 

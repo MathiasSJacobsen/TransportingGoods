@@ -52,6 +52,6 @@ class ThreeExchange: Operation() {
         temp[indexChosen31] = chosen2
         temp[indexChosen32] = chosen2
 
-        return Solution(solution.instance, temp.toIntArray())
+        return Solution(solution.instance, temp)
     }
 }

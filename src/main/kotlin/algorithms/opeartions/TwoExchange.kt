@@ -38,6 +38,6 @@ class TwoExchange: Operation() {
         temp[indexChosen21] = chosen1
         temp[indexChosen22] = chosen1
 
-        return Solution(solution.instance, temp.toIntArray())
+        return Solution(solution.instance, temp)
     }
 }

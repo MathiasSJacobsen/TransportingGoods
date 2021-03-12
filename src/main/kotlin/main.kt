@@ -1,9 +1,5 @@
-import algorithms.BlindRandomSearch
 import algorithms.IAlgorithm
-import algorithms.LocalSearch
 import algorithms.SimulatedAnnealing
-import algorithms.opeartions.OneReinsert
-import algorithms.opeartions.TwoExchange
 import utils.Instance
 import utils.costFunction
 import utils.parseInstance
@@ -18,20 +14,21 @@ fun main(args: Array<String>) {
     val CALL_130_VEHICLE_40 = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
     runAlgo(CALL_080_VEHICLE_20, SimulatedAnnealing())
 
-
+    val e = mutableListOf<Int>(1,2,3,4,5,6,7)
+    print(e)
 
 }
 fun genInitialSolution(instance: Instance): Solution {
-    val t = arrayListOf<Int>()
+    val sol = arrayListOf<Int>()
 
     for (i in 0 until instance.numberOfVehicles){
-        t.add(-1)
+        sol.add(-1)
     }
     for (i in 0 until instance.numberOfCalls){
-        t.add(i)
-        t.add(i)
+        sol.add(i)
+        sol.add(i)
     }
-    return Solution(instance, t.toIntArray())
+    return Solution(instance, sol)
 
 }
 fun runAlgo(instance: Instance, search: IAlgorithm) {

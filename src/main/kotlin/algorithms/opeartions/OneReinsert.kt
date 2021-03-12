@@ -38,6 +38,6 @@ class OneReinsert(): Operation() {
         }
         finalSolution.removeAt(finalSolution.lastIndex)
 
-        return Solution(solution.instance, finalSolution.toIntArray());
+        return Solution(solution.instance, finalSolution);
     }
 }
