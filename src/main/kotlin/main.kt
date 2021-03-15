@@ -14,9 +14,6 @@ fun main(args: Array<String>) {
     val CALL_130_VEHICLE_40 = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
     runAlgo(CALL_080_VEHICLE_20, SimulatedAnnealing())
 
-    val e = mutableListOf<Int>(1,2,3,4,5,6,7)
-    print(e)
-
 }
 fun genInitialSolution(instance: Instance): Solution {
     val sol = arrayListOf<Int>()
@@ -35,7 +32,7 @@ fun runAlgo(instance: Instance, search: IAlgorithm) {
     val initSol = genInitialSolution(instance)
     var bestSol : Solution = initSol
     var t = initSol
-    var avrageCost = 0
+    var averageCost = 0
     for (i in 0 until 10){
         val time = measureTimeMillis {
             t = search.search(initSol)
@@ -44,9 +41,9 @@ fun runAlgo(instance: Instance, search: IAlgorithm) {
             if (costNewInstance < costFunction(bestSol.instance, bestSol.arr)){
                 bestSol=t
         }
-        avrageCost += costNewInstance
+        averageCost += costNewInstance
         println(time)
     }
-    println(avrageCost/10)
+    println(averageCost/10)
     println((costFunction(initSol.instance, initSol.arr).toDouble()-bestSol.cost)/costFunction(initSol.instance, initSol.arr))
 }
