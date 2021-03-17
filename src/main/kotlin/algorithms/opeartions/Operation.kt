@@ -24,4 +24,15 @@ abstract class Operation {
         return route
     }
 
+    fun fromIndependentRoutesToSolution(independentRoutes: MutableList<MutableList<Int>>): MutableList<Int> {
+        val out = mutableListOf<Int>()
+        for (route in independentRoutes){
+            out.add(-1)
+            for (call in route){
+                out.add(call)
+            }
+        }
+        return out
+    }
+
 }
