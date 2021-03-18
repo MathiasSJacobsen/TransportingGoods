@@ -6,6 +6,9 @@ import utils.costFunction
 import utils.isFeasible
 
 class BlindRandomSearch : IAlgorithm {
+    override val name: String
+        get() = "Blind Random search"
+
     override fun search(initSolution: Solution): Solution {
         var bestSolution = initSolution
         for (i in 0 until 10000){

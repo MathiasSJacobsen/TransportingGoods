@@ -10,6 +10,9 @@ import utils.isFeasible
 import kotlin.random.Random
 
 class LocalSearch:IAlgorithm {
+    override val name: String
+        get() = "Local search"
+
     override fun search(initSolution: Solution): Solution {
         val p1 = 0.5
         val p2 = 0.01

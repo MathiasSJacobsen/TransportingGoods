@@ -10,6 +10,9 @@ import kotlin.math.exp
 import kotlin.random.Random
 
 class SimulatedAnnealing : IAlgorithm{
+    override val name: String
+        get() = "Simulated annealing"
+
     override fun search(initSolution: Solution): Solution {
         val p1 = 0.3
         val p2 = 0.2
