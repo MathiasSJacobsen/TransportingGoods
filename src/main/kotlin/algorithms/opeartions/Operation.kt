@@ -32,6 +32,7 @@ abstract class Operation {
                 out.add(call)
             }
         }
+        out.removeAt(0)
         return out
     }
 
