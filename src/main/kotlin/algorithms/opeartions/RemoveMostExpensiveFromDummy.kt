@@ -7,7 +7,6 @@ class RemoveMostExpensiveFromDummy : Operation() {
     /*
     Takes the most expensive call from the dummy vehicle and places it on one vehicle that
     can take that call.
-
      */
     override fun operation(solution: Solution): Solution {
         val instance = solution.instance
