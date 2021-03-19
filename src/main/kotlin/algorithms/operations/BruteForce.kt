@@ -1,8 +1,7 @@
-package algorithms.opeartions
+package algorithms.operations
 
 import Solution
 import java.util.Collections.swap
-import kotlin.random.Random
 import utils.costFunction
 import utils.isFeasible
 

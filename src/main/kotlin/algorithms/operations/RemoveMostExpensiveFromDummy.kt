@@ -1,4 +1,4 @@
-package algorithms.opeartions
+package algorithms.operations
 
 import Solution
 import utils.Vehicle
