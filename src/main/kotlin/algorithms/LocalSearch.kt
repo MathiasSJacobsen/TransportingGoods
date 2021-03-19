@@ -1,10 +1,9 @@
 package algorithms
 
 import Solution
-import algorithms.opeartions.OneReinsert
-import algorithms.opeartions.ThreeExchange
-import algorithms.opeartions.TwoExchange
-import utils.Instance
+import algorithms.operations.OneReinsert
+import algorithms.operations.ThreeExchange
+import algorithms.operations.TwoExchange
 import utils.costFunction
 import utils.isFeasible
 import kotlin.random.Random
@@ -14,8 +13,8 @@ class LocalSearch:IAlgorithm {
         get() = "Local search"
 
     override fun search(initSolution: Solution): Solution {
-        val p1 = 0.5
-        val p2 = 0.01
+        val p1 = 0.3
+        val p2 = 0.2
         val instance = initSolution.instance
         var bestSolution = initSolution
 
