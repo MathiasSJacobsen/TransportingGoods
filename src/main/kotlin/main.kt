@@ -8,14 +8,17 @@ import utils.Instance
 import utils.costFunction
 import utils.parseInstance
 import kotlin.system.measureTimeMillis
+import utils.MarkdownMaker
+
+val markdownMaker = MarkdownMaker()
 
 fun main(args: Array<String>) {
 
-    val CALL_007_VEHICLE_03 = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
-    val CALL_018_VEHICLE_05 = parseInstance("src/main/kotlin/data/Call_18_Vehicle_5.txt")
-    val CALL_035_VEHICLE_07 = parseInstance("src/main/kotlin/data/Call_035_Vehicle_07.txt")
-    val CALL_080_VEHICLE_20 = parseInstance("src/main/kotlin/data/Call_080_Vehicle_20.txt")
-    val CALL_130_VEHICLE_40 = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
+    val CALL_007_VEHICLE_03 : Instance = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
+    val CALL_018_VEHICLE_05 : Instance = parseInstance("src/main/kotlin/data/Call_18_Vehicle_5.txt")
+    val CALL_035_VEHICLE_07 : Instance = parseInstance("src/main/kotlin/data/Call_035_Vehicle_07.txt")
+    val CALL_080_VEHICLE_20 : Instance = parseInstance("src/main/kotlin/data/Call_080_Vehicle_20.txt")
+    val CALL_130_VEHICLE_40 : Instance = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
     val ALGORITHMS =
         listOf<IAlgorithm>(BlindRandomSearch(), LocalSearch(), SimulatedAnnealing(), SimulatedAnnealingBetter())
     val INSTANCES = listOf<Instance>(
@@ -78,38 +81,6 @@ fun runAlgo(instance: Instance, search: IAlgorithm): Result {
     )
 }
 
-fun makeMarkdownFile(tables: String) {
-    val file = File("src/main/kotlin/test.md")
-    file.writeText("")
-    file.appendText("<h1>Transporting Goods\n")
-    file.appendText("<h4>By Mathias Skallerud Jacobsen\n")
-    file.appendText("\n\nINF273 - Meta-Heuristics  \n\n")
-    file.appendText(tables)
-    file.appendText("  \n\n\n")
-
-}
-
-fun makeMarkdownTableForAGivenInstance(results: ArrayList<Result>): String {
-    var table = "| | | ${results[0].instanceName} | | |  \n" +
-            "| --- | --- | --- | --- | --- |  \n" +
-            "| | Ave. objective | Best objective | Imp (%) | Runtime |  \n"
-    var bestSolutions = ""
-    for (result in results) {
-        val search = result.search
-        val averageCost = result.averageCost
-        val bestObjective = result.bestObjective
-        val improvement = result.improvement
-        val runningTime = result.runningTime
-        table += "| $search | $averageCost | $bestObjective | $improvement % | $runningTime s |  \n"
-        bestSolutions += "Best solution $search: `${result.solution}`  \n"
-    }
-    table += "  \n  \n"
-    table += bestSolutions
-    table += "  \n  \n"
-
-    return table
-}
-
 fun runAllInstancesWithAllAlgorithms(instances: List<Instance>, algorithms: List<IAlgorithm>) {
     var tables = ""
     for (instance in instances) {
@@ -117,7 +88,7 @@ fun runAllInstancesWithAllAlgorithms(instances: List<Instance>, algorithms: List
         for (algo in algorithms) {
             results.add(runAlgo(instance, algo))
         }
-        tables += makeMarkdownTableForAGivenInstance(results)
+        tables += markdownMaker.makeMarkdownTableForAGivenInstance(results)
     }
-    makeMarkdownFile(tables)
+    markdownMaker.makeMarkdownFile(tables)
 }
