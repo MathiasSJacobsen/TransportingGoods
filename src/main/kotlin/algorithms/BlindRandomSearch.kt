@@ -9,7 +9,7 @@ class BlindRandomSearch : IAlgorithm {
     override val name: String
         get() = "Blind Random search"
 
-    override fun search(initSolution: Solution): Solution {
+    override fun search(initSolution: Solution, timeConstraint: Int): Solution {
         var bestSolution = initSolution
         for (i in 0 until 10000){
             val currentSolution = generateRandomValidSolution(bestSolution.instance)

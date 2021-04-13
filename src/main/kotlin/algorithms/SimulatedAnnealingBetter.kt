@@ -1,8 +1,9 @@
 package algorithms
 
 import Solution
+import algorithms.operations.BruteForce
 import algorithms.operations.K_Reinsert
-import algorithms.operations.LeastWaitTime
+import algorithms.operations.OneReinsert
 import algorithms.operations.RemoveMostExpensiveFromDummy
 import kotlin.math.exp
 import kotlin.random.Random
@@ -13,9 +14,10 @@ class SimulatedAnnealingBetter : IAlgorithm {
     override val name: String
         get() = "Simulated annealing (new)"
 
-    override fun search(initSolution: Solution): Solution {
-        val p1 = 0.4
-        val p2 = 0.2
+    override fun search(initSolution: Solution, timeConstraint: Int): Solution {
+        val p1 = 0.001
+        val p2 = 0.001
+        val p3 = 0.5
         val instance = initSolution.instance
         var temperature = 200.0
         val coolingFactor = 0.998
@@ -25,11 +27,13 @@ class SimulatedAnnealingBetter : IAlgorithm {
             val rand = Random.nextFloat()
             val newSolution = when {
                 rand < p1 -> {
-                    K_Reinsert().operation(incumbent)
+                    BruteForce().operation(incumbent)
                 } rand < p1 + p2 -> {
-                    RemoveMostExpensiveFromDummy().operation(incumbent)
+                    K_Reinsert().operation(incumbent)
+                } rand < p1 + p2 + p3 ->{
+                    OneReinsert().operation(incumbent)
                 } else -> {
-                    LeastWaitTime().operation(incumbent)
+                    RemoveMostExpensiveFromDummy().operation(incumbent)
                 }
             }
             val deltaE = costFunction1(instance, newSolution.arr) - costFunction1(instance, incumbent.arr)
