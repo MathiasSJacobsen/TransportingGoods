@@ -1,9 +1,9 @@
 import algorithms.BlindRandomSearch
+import algorithms.GeneralAdaptiveMetaHeuristicFramework
 import algorithms.IAlgorithm
 import algorithms.LocalSearch
 import algorithms.SimulatedAnnealing
 import algorithms.SimulatedAnnealingBetter
-import java.io.File
 import utils.Instance
 import utils.costFunction
 import utils.parseInstance
@@ -14,13 +14,19 @@ val markdownMaker = MarkdownMaker()
 
 fun main(args: Array<String>) {
 
-    val CALL_007_VEHICLE_03 : Instance = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
-    val CALL_018_VEHICLE_05 : Instance = parseInstance("src/main/kotlin/data/Call_18_Vehicle_5.txt")
-    val CALL_035_VEHICLE_07 : Instance = parseInstance("src/main/kotlin/data/Call_035_Vehicle_07.txt")
-    val CALL_080_VEHICLE_20 : Instance = parseInstance("src/main/kotlin/data/Call_080_Vehicle_20.txt")
-    val CALL_130_VEHICLE_40 : Instance = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
+    val CALL_007_VEHICLE_03: Instance = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
+    val CALL_018_VEHICLE_05: Instance = parseInstance("src/main/kotlin/data/Call_18_Vehicle_5.txt")
+    val CALL_035_VEHICLE_07: Instance = parseInstance("src/main/kotlin/data/Call_035_Vehicle_07.txt")
+    val CALL_080_VEHICLE_20: Instance = parseInstance("src/main/kotlin/data/Call_080_Vehicle_20.txt")
+    val CALL_130_VEHICLE_40: Instance = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
     val ALGORITHMS =
-        listOf<IAlgorithm>(BlindRandomSearch(), LocalSearch(), SimulatedAnnealing(), SimulatedAnnealingBetter())
+        listOf<IAlgorithm>(
+            BlindRandomSearch(),
+            LocalSearch(),
+            SimulatedAnnealing(),
+            SimulatedAnnealingBetter(),
+            GeneralAdaptiveMetaHeuristicFramework()
+        )
     val INSTANCES = listOf<Instance>(
         CALL_007_VEHICLE_03,
         CALL_018_VEHICLE_05,
@@ -28,9 +34,11 @@ fun main(args: Array<String>) {
         CALL_080_VEHICLE_20,
         CALL_130_VEHICLE_40
     )
-
+    //val startTime = LocalTime.now()
+    //val endTime = LocalTime.of(0,10)
+    //println("${startTime.plusMinutes(endTime.minute.toLong())} $startTime")
     runAllInstancesWithAllAlgorithms(INSTANCES, ALGORITHMS)
-
+    //println(runAlgo(CALL_007_VEHICLE_03, GeneralAdaptiveMetaHeuristicFramework()).improvement)
 }
 
 fun genInitialSolution(instance: Instance): Solution {
@@ -46,15 +54,24 @@ fun genInitialSolution(instance: Instance): Solution {
     return Solution(instance, sol)
 }
 
-fun runAlgo(instance: Instance, search: IAlgorithm): Result {
+fun runAlgo(instance: Instance, heuristic: IAlgorithm): Result {
     val initSol = genInitialSolution(instance)
     var bestSol: Solution = initSol
-    var t = initSol
+    var t: Solution
     var averageCost = 0
     var sumtime = 0.0
-    for (i in 0 until 10) {
+    val timeConstraint = when (instance.numberOfVehicles) {
+        3 -> 5
+        5 -> 20
+        7 -> 100
+        20 -> 175
+        40 -> 300
+        else -> kotlin.error("Cant find time constraint")
+    }
+
+    for (i in 0 until 1) {
         val time = measureTimeMillis {
-            t = search.search(initSol)
+            t = heuristic.search(initSol, timeConstraint)
         }
         val costNewInstance = costFunction(t.instance, t.arr)
         if (costNewInstance < costFunction(bestSol.instance, bestSol.arr)) {
@@ -71,7 +88,7 @@ fun runAlgo(instance: Instance, search: IAlgorithm): Result {
     val averageRuntime = (sumtime / 10) / 1000
     return Result(
         name,
-        search.name,
+        heuristic.name,
         (averageCost / 10).toLong(),
         bestSol.cost,
         String.format("%.3f", improvement * 100).toDouble(),
