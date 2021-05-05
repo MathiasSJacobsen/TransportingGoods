@@ -3,8 +3,11 @@ package algorithms.operations.forExam
 import Solution
 import algorithms.operations.Operation
 
-class RandomRemovalGreedyInsertion : Operation()
-{
+class RandomRemovalGreedyInsertion : Operation() {
+
+    /**
+     * Finds random calls and uses best greedy insertion to replace them
+     */
     override fun operation(solution: Solution): Solution {
         val instance = solution.instance
         val solutionWithIndependentRoutes = solutionWithIndependentRoutes(solution)
