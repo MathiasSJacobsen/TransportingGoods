@@ -12,13 +12,15 @@ class LocalSearch:IAlgorithm {
     override val name: String
         get() = "Local search"
 
-    override fun search(initSolution: Solution, timeConstraint: Int): Solution {
+    override fun search(initSolution: Solution, timeConstraint: Double): Solution {
         val p1 = 0.3
-        val p2 = 0.2
+        val p2 = 0.3
         val instance = initSolution.instance
         var bestSolution = initSolution
 
-        for (i in 0 until 10000){
+        val endTime = System.currentTimeMillis() + timeConstraint * 1000L
+
+        while (System.currentTimeMillis() < endTime){
             val rand = Random.nextFloat()
             val currentSolution = when {
                 rand < p1 -> {

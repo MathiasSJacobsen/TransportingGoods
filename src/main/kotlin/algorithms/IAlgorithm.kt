@@ -4,5 +4,5 @@ import Solution
 
 interface IAlgorithm {
     val name: String
-    fun search(initSolution: Solution, timeConstraint: Int = 0) : Solution
+    fun search(initSolution: Solution, timeConstraint: Double = 0.0) : Solution
 }

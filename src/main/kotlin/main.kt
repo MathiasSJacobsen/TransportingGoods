@@ -4,6 +4,7 @@ import algorithms.IAlgorithm
 import algorithms.LocalSearch
 import algorithms.SimulatedAnnealing
 import algorithms.SimulatedAnnealingBetter
+import java.time.LocalTime
 import utils.Instance
 import utils.costFunction
 import utils.parseInstance
@@ -32,13 +33,10 @@ fun main(args: Array<String>) {
         CALL_018_VEHICLE_05,
         CALL_035_VEHICLE_07,
         CALL_080_VEHICLE_20,
-        CALL_130_VEHICLE_40
+        CALL_130_VEHICLE_40,
     )
-    //val startTime = LocalTime.now()
-    //val endTime = LocalTime.of(0,10)
-    //println("${startTime.plusMinutes(endTime.minute.toLong())} $startTime")
-    runAllInstancesWithAllAlgorithms(INSTANCES, ALGORITHMS)
-    //println(runAlgo(CALL_007_VEHICLE_03, GeneralAdaptiveMetaHeuristicFramework()).improvement)
+    runAllInstancesWithAllAlgorithms(INSTANCES, listOf(GeneralAdaptiveMetaHeuristicFramework()))
+
 }
 
 fun genInitialSolution(instance: Instance): Solution {
@@ -55,21 +53,23 @@ fun genInitialSolution(instance: Instance): Solution {
 }
 
 fun runAlgo(instance: Instance, heuristic: IAlgorithm): Result {
+    val iterations = 1
     val initSol = genInitialSolution(instance)
     var bestSol: Solution = initSol
     var t: Solution
     var averageCost = 0
     var sumtime = 0.0
     val timeConstraint = when (instance.numberOfVehicles) {
-        3 -> 5
-        5 -> 20
-        7 -> 100
-        20 -> 175
-        40 -> 300
+        3 -> 4.0
+        5 -> 19.0
+        7 -> 99.0
+        20 -> 174.0
+        40 -> 300.0
         else -> kotlin.error("Cant find time constraint")
     }
 
-    for (i in 0 until 1) {
+
+    for (i in 0 until iterations) {
         val time = measureTimeMillis {
             t = heuristic.search(initSol, timeConstraint)
         }
@@ -85,11 +85,11 @@ fun runAlgo(instance: Instance, heuristic: IAlgorithm): Result {
         initSol.instance,
         initSol.arr
     )
-    val averageRuntime = (sumtime / 10) / 1000
+    val averageRuntime = (sumtime / iterations) / 1000
     return Result(
         name,
         heuristic.name,
-        (averageCost / 10).toLong(),
+        (averageCost / iterations).toLong(),
         bestSol.cost,
         String.format("%.3f", improvement * 100).toDouble(),
         "%.4f".format(averageRuntime),

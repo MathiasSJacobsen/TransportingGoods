@@ -1,26 +1,28 @@
-package algorithms
+package algorithms.operations.escape
 
 import Solution
+import algorithms.operations.Operation
+import algorithms.operations.TwoExchange
 import utils.Instance
-import utils.costFunction
 import utils.isFeasible
 
-class BlindRandomSearch : IAlgorithm {
-    override val name: String
-        get() = "Blind Random search"
+class EscapeThisHell : Operation() {
+    override fun operation(solution: Solution): Solution {
+        val instance = solution.instance
+        var t = solutionWithIndependentRoutes(solution)
+        var i = 0
+        var newSol = solution
+        var bestSolution = newSol
+        while (i < 20){
+            newSol = generateRandomValidSolution(instance)
+            if (isFeasible(instance, solution.arr).first){
+                i++
 
-    override fun search(initSolution: Solution, timeConstraint: Double): Solution {
-        var bestSolution = initSolution
-        for (i in 0 until 10000){
-            val currentSolution = generateRandomValidSolution(bestSolution.instance)
-            if (isFeasible(currentSolution.instance, currentSolution.arr).first &&
-                costFunction(currentSolution.instance, currentSolution.arr) < costFunction(bestSolution.instance, bestSolution.arr)){
-                bestSolution = currentSolution
+                bestSolution = newSol
             }
         }
         return bestSolution
     }
-
 
     private fun generateRandomValidSolution(instance: Instance): Solution {
         val t = arrayListOf<Int>()
@@ -51,6 +53,5 @@ class BlindRandomSearch : IAlgorithm {
         sol.addAll(currentVehicle)
         return Solution(instance, sol)
     }
-
 
 }

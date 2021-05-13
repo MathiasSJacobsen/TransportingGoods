@@ -13,7 +13,7 @@ class SimulatedAnnealing : IAlgorithm{
     override val name: String
         get() = "Simulated annealing"
 
-    override fun search(initSolution: Solution, timeConstraint: Int): Solution {
+    override fun search(initSolution: Solution, timeConstraint: Double): Solution {
         val p1 = 0.3
         val p2 = 0.2
         val instance = initSolution.instance
