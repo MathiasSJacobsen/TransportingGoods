@@ -13,7 +13,7 @@ import kotlin.system.measureTimeMillis
 import utils.MarkdownMaker
 
 val markdownMaker = MarkdownMaker()
-const val iterations = 5
+const val iterations = 1
 fun main(args: Array<String>) {
 
     val CALL_007_VEHICLE_03: Instance = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
@@ -32,9 +32,9 @@ fun main(args: Array<String>) {
     val INSTANCES = listOf<Instance>(
         CALL_007_VEHICLE_03,
         CALL_018_VEHICLE_05,
-       // CALL_035_VEHICLE_07,
-        //CALL_080_VEHICLE_20,
-       // CALL_130_VEHICLE_40,
+        CALL_035_VEHICLE_07,
+        CALL_080_VEHICLE_20,
+        CALL_130_VEHICLE_40,
     )
 
     val start = LocalDateTime.now()
@@ -44,9 +44,6 @@ fun main(args: Array<String>) {
     runAllInstancesWithAllAlgorithms(INSTANCES, listOf(GeneralAdaptiveMetaHeuristicFramework()))
     println(LocalDateTime.now())
 
-
-    //println(EscapeThisHell().operation(Solution(CALL_007_VEHICLE_03, mutableListOf<Int>(0,2,2,1,1,0,0,3,3,4,4,5,5,6,6,7,7).map { it-1 }.toMutableList())).arr)
-    //println(runAlgo(CALL_080_VEHICLE_20, GeneralAdaptiveMetaHeuristicFramework()).improvement)
 }
 
 fun genInitialSolution(instance: Instance): Solution {
