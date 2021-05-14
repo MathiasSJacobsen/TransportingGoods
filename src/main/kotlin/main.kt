@@ -4,7 +4,8 @@ import algorithms.IAlgorithm
 import algorithms.LocalSearch
 import algorithms.SimulatedAnnealing
 import algorithms.SimulatedAnnealingBetter
-import java.time.LocalTime
+import algorithms.operations.escape.EscapeThisHell
+import java.time.LocalDateTime
 import utils.Instance
 import utils.costFunction
 import utils.parseInstance
@@ -12,7 +13,7 @@ import kotlin.system.measureTimeMillis
 import utils.MarkdownMaker
 
 val markdownMaker = MarkdownMaker()
-
+const val iterations = 5
 fun main(args: Array<String>) {
 
     val CALL_007_VEHICLE_03: Instance = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
@@ -31,12 +32,21 @@ fun main(args: Array<String>) {
     val INSTANCES = listOf<Instance>(
         CALL_007_VEHICLE_03,
         CALL_018_VEHICLE_05,
-        CALL_035_VEHICLE_07,
-        CALL_080_VEHICLE_20,
-        CALL_130_VEHICLE_40,
+       // CALL_035_VEHICLE_07,
+        //CALL_080_VEHICLE_20,
+       // CALL_130_VEHICLE_40,
     )
-    runAllInstancesWithAllAlgorithms(INSTANCES, listOf(GeneralAdaptiveMetaHeuristicFramework()))
 
+    val start = LocalDateTime.now()
+    println(start)
+    val final = start.plusSeconds((600*iterations).toLong())
+    println(final)
+    runAllInstancesWithAllAlgorithms(INSTANCES, listOf(GeneralAdaptiveMetaHeuristicFramework()))
+    println(LocalDateTime.now())
+
+
+    //println(EscapeThisHell().operation(Solution(CALL_007_VEHICLE_03, mutableListOf<Int>(0,2,2,1,1,0,0,3,3,4,4,5,5,6,6,7,7).map { it-1 }.toMutableList())).arr)
+    //println(runAlgo(CALL_080_VEHICLE_20, GeneralAdaptiveMetaHeuristicFramework()).improvement)
 }
 
 fun genInitialSolution(instance: Instance): Solution {
@@ -53,29 +63,30 @@ fun genInitialSolution(instance: Instance): Solution {
 }
 
 fun runAlgo(instance: Instance, heuristic: IAlgorithm): Result {
-    val iterations = 1
+
     val initSol = genInitialSolution(instance)
     var bestSol: Solution = initSol
-    var t: Solution
+    var resultFromSearch: Solution
     var averageCost = 0
     var sumtime = 0.0
     val timeConstraint = when (instance.numberOfVehicles) {
-        3 -> 4.0
-        5 -> 19.0
-        7 -> 99.0
-        20 -> 174.0
-        40 -> 300.0
+        3 -> 4.0/4
+        5 -> 19.0/4
+        7 -> 99.0/4
+        20 -> 174.0/4
+        40 -> 300.0/4
         else -> kotlin.error("Cant find time constraint")
     }
 
 
-    for (i in 0 until iterations) {
+
+    for (i in 0 until iterations*4) {
         val time = measureTimeMillis {
-            t = heuristic.search(initSol, timeConstraint)
+            resultFromSearch = heuristic.search(initSol, timeConstraint)
         }
-        val costNewInstance = costFunction(t.instance, t.arr)
+        val costNewInstance = costFunction(resultFromSearch.instance, resultFromSearch.arr)
         if (costNewInstance < costFunction(bestSol.instance, bestSol.arr)) {
-            bestSol = t
+            bestSol = resultFromSearch
         }
         averageCost += costNewInstance
         sumtime += time
@@ -85,11 +96,13 @@ fun runAlgo(instance: Instance, heuristic: IAlgorithm): Result {
         initSol.instance,
         initSol.arr
     )
-    val averageRuntime = (sumtime / iterations) / 1000
+    val averageRuntime = (sumtime / (iterations*4)) / 1000
+    println(improvement)
+    println(bestSol.solution)
     return Result(
         name,
         heuristic.name,
-        (averageCost / iterations).toLong(),
+        (averageCost / (iterations*4)).toLong(),
         bestSol.cost,
         String.format("%.3f", improvement * 100).toDouble(),
         "%.4f".format(averageRuntime),

@@ -9,49 +9,66 @@ import utils.isFeasible
 class EscapeThisHell : Operation() {
     override fun operation(solution: Solution): Solution {
         val instance = solution.instance
-        var t = solutionWithIndependentRoutes(solution)
-        var i = 0
-        var newSol = solution
-        var bestSolution = newSol
-        while (i < 20){
-            newSol = generateRandomValidSolution(instance)
-            if (isFeasible(instance, solution.arr).first){
-                i++
-
-                bestSolution = newSol
-            }
+        var solutionWithIndependentRoutes = solutionWithIndependentRoutes(solution)
+        var randomVehicle = (0 until solutionWithIndependentRoutes.lastIndex).random()
+        var chosenVehicle = solutionWithIndependentRoutes[randomVehicle].toMutableList()
+        if (solutionWithIndependentRoutes[solutionWithIndependentRoutes.lastIndex].size == instance.numberOfCalls*2){
+            return solution
         }
-        return bestSolution
-    }
-
-    private fun generateRandomValidSolution(instance: Instance): Solution {
-        val t = arrayListOf<Int>()
-        for (i in 0 until instance.numberOfCalls){
-            t.add(i)
+        while (chosenVehicle.size == 0) {
+            randomVehicle = (0 until solutionWithIndependentRoutes.lastIndex).random()
+            chosenVehicle = solutionWithIndependentRoutes[randomVehicle]
         }
-        for (i in 0 until instance.numberOfVehicles){
-            t.add(-1)
-        }
-        t.shuffle()
+        val numberOfCallsToTakeOut = (0..chosenVehicle.size step 2)
+        val r = (1..(numberOfCallsToTakeOut.last / 2)).random()
 
-        val sol = arrayListOf<Int>()
-        var currentVehicle = arrayListOf<Int>()
-
-        for (e in t){
-            if (e == -1){
-                currentVehicle.addAll(currentVehicle)
-                currentVehicle.shuffle()
-                sol.addAll(currentVehicle)
-                sol.add(-1)
-                currentVehicle = arrayListOf<Int>()
+        for (i in 0 until r) {
+            val callToRemove = chosenVehicle[0]
+            chosenVehicle.remove(callToRemove)
+            chosenVehicle.remove(callToRemove)
+            solutionWithIndependentRoutes[randomVehicle] = chosenVehicle
+            val compatibleVehicle = findCompatibleVehicleForCall(callToRemove, randomVehicle, instance)
+            if (compatibleVehicle.size == 0) {
+                solutionWithIndependentRoutes[solutionWithIndependentRoutes.lastIndex].add(callToRemove)
+                solutionWithIndependentRoutes[solutionWithIndependentRoutes.lastIndex].add(callToRemove)
             } else {
-                currentVehicle.add(e)
+                var foundPlaceForCall = false
+                for (vehicle in compatibleVehicle){
+                    foundPlaceForCall = false
+                    val copyOfTestVehicle = solutionWithIndependentRoutes[vehicle].toMutableList()
+                    val copyOfTestRoute = solutionWithIndependentRoutes.toMutableList()
+                    copyOfTestVehicle.add(callToRemove)
+                    copyOfTestVehicle.add(callToRemove)
+                    copyOfTestRoute[vehicle] = copyOfTestVehicle
+                    if(isFeasible(fromIndependentRoutesToSolution(copyOfTestRoute), instance, vehicle).first){
+                        foundPlaceForCall = true
+                        solutionWithIndependentRoutes = copyOfTestRoute
+                        break
+                    }
+                }
+                if (!foundPlaceForCall) {
+                    solutionWithIndependentRoutes[solutionWithIndependentRoutes.lastIndex].add(callToRemove)
+                    solutionWithIndependentRoutes[solutionWithIndependentRoutes.lastIndex].add(callToRemove)
+
+                }
             }
         }
-        currentVehicle.addAll(currentVehicle)
-        currentVehicle.shuffle()
-        sol.addAll(currentVehicle)
-        return Solution(instance, sol)
+        return Solution(instance, fromIndependentRoutesToSolution(solutionWithIndependentRoutes))
     }
+
+    private fun findCompatibleVehicleForCall(
+        call: Int,
+        vehicleToNotInclude: Int,
+        instance: Instance
+    ): MutableList<Int> {
+        val compatibleVehicle = mutableListOf<Int>()
+        for (vehicle in instance.vehicles) {
+            if (vehicle?.possibleCalls?.contains(call)!! && vehicle.index != vehicleToNotInclude) {
+                compatibleVehicle.add(vehicle.index)
+            }
+        }
+        return compatibleVehicle
+    }
+
 
 }

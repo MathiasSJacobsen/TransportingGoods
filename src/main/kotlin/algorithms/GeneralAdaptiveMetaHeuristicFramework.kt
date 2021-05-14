@@ -69,7 +69,7 @@ class GeneralAdaptiveMetaHeuristicFramework : IAlgorithm {
         val temperatureFinal = 0.01
         var startTime = System.currentTimeMillis()
 
-        println("This will end ${LocalTime.now().plusSeconds(timeConstraint.toLong())}")
+        println("Starting ${instance.numberOfCalls} calls ${instance.numberOfVehicles}")
 
         while (startTime < endTime) {
             var bestSoulThisRound = false
