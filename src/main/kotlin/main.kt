@@ -16,11 +16,11 @@ val markdownMaker = MarkdownMaker()
 const val iterations = 1
 fun main(args: Array<String>) {
 
-    val CALL_007_VEHICLE_03: Instance = parseInstance("src/main/kotlin/data/Call_7_Vehicle_3.txt")
-    val CALL_018_VEHICLE_05: Instance = parseInstance("src/main/kotlin/data/Call_18_Vehicle_5.txt")
-    val CALL_035_VEHICLE_07: Instance = parseInstance("src/main/kotlin/data/Call_035_Vehicle_07.txt")
-    val CALL_080_VEHICLE_20: Instance = parseInstance("src/main/kotlin/data/Call_080_Vehicle_20.txt")
-    val CALL_130_VEHICLE_40: Instance = parseInstance("src/main/kotlin/data/Call_130_Vehicle_40.txt")
+    val CALL_007_VEHICLE_03: Instance = parseInstance("src/main/kotlin/data/Exam_instances/New_Call_7.txt")
+    val CALL_018_VEHICLE_05: Instance = parseInstance("src/main/kotlin/data/Exam_instances/New_Call_18.txt")
+    val CALL_035_VEHICLE_07: Instance = parseInstance("src/main/kotlin/data/Exam_instances/New_Call_35.txt")
+    val CALL_080_VEHICLE_20: Instance = parseInstance("src/main/kotlin/data/Exam_instances/New_Call_80.txt")
+    val CALL_130_VEHICLE_40: Instance = parseInstance("src/main/kotlin/data/Exam_instances/New_Call_130.txt")
     val ALGORITHMS =
         listOf<IAlgorithm>(
             BlindRandomSearch(),
